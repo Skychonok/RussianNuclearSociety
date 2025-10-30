@@ -59,7 +59,7 @@ def profile_view(request):
         user.save()
         
         messages.success(request, 'Ваш профиль был успешно обновлен!')
-        return redirect('profile')
+        return redirect('/accounts/profile/')
     
     return render(request, 'accounts/profile.html')
 
