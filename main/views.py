@@ -45,6 +45,22 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        
+        user = request.user
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+        
+        messages.success(request, 'Ваш профиль был успешно обновлен!')
+        return redirect('profile')
+    
     return render(request, 'accounts/profile.html')
 
 @login_required
