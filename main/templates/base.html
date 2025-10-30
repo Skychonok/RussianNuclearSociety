@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,11 +10,11 @@
 <body>
     <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom"> 
         <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto align-items-center">
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'home' %}">Главная</a> 
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'educ' %}">Образование и карьера</a> 
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'materials' %}">Материалы</a> 
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'events' %}">Мероприятия</a> 
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'about_us' %}">О нас</a> 
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:home' %}">Главная</a> 
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:educ' %}">Образование и карьера</a> 
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:materials' %}">Материалы</a> 
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:events' %}">Мероприятия</a> 
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:about_us' %}">О нас</a>
             
             {% if user.is_authenticated %}
                 <!-- пользователь вошел -->
@@ -26,7 +27,7 @@
                 </form>
             {% else %}
                 <!-- пользователь НЕ вошел -->
-                <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'login' %}">Вход</a>
+                <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'main:login' %}">Вход</a>
             {% endif %}
         </nav> 
     </div>    
