@@ -1,8 +1,24 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
 from .models import Article, Category, Tag
+
+User = get_user_model()
+
+class UserProfileForm(forms.ModelForm):
+    """Форма для обновления профиля с валидацией уникальности и полей"""
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'nickname']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'nickname': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 class ArticleForm(forms.ModelForm):

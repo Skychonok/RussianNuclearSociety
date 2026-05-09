@@ -1,15 +1,20 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = 'main'
 
-urlpatterns = [
+urlpatterns =[
     path('', views.home_page, name='home'),
-    path('educ/', views.educ_page, name='educ'),
     path('events/', views.events_page, name='events'),
+    path('about-us/', views.about_us_page, name='about_us'),
+    
+    # Новые выделенные маршруты для вкладок согласно макетам
+    path('industry/', views.industry_page, name='industry'),
     path('materials/', views.materials_page, name='materials'),
-    path('about_us/', views.about_us_page, name='about_us'),
+    path('educ/', views.educ_page, name='educ'),
+    
+    # Авторизация и профиль
     path('accounts/login/', views.login_page, name='login'),
     path('accounts/logout/', views.logout_view, name='logout'),
     path('accounts/profile/', views.profile_view, name="profile"),
@@ -18,8 +23,8 @@ urlpatterns = [
     path(
         'accounts/password/change/',
         auth_views.PasswordChangeView.as_view(
-            template_name='accounts/info_manager.html', 
-            success_url='/accounts/password/change/done/'
+            template_name='accounts/info_manager.html',
+            success_url=reverse_lazy('main:password_change_done')
         ),
         name='password_change'
     ),
@@ -32,12 +37,14 @@ urlpatterns = [
     ),
 
     # Articles
+    path('search/', views.search_view, name='search'),
     path('articles/', views.ArticleListView.as_view(), name='article_list'),
     path('articles/create/', views.ArticleCreateView.as_view(), name='article_create'),
     path('articles/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
     path('articles/<slug:slug>/edit/', views.ArticleUpdateView.as_view(), name='article_edit'),
     path('articles/<slug:slug>/delete/', views.ArticleDeleteView.as_view(), name='article_delete'),
     path('articles/<slug:slug>/publish/', views.article_publish_toggle, name='article_publish_toggle'),
+    path('articles/<slug:slug>/comment/', views.add_comment, name='add_comment'),
 
     # Categories
     path('categories/', views.CategoryListView.as_view(), name='category_list'),
@@ -50,11 +57,12 @@ urlpatterns = [
     path('management/', views.article_management_dashboard, name='management_dashboard'),
     path('management/articles/', views.ArticleManagementListView.as_view(), name='article_management'),
 
-
     # Password reset
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/', auth_views.PasswordResetView.as_view(success_url=reverse_lazy('main:password_reset_done')), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('main:password_reset_complete')), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-
+    
+    # Динамические страницы (ДОЛЖНЫ БЫТЬ В САМОМ КОНЦЕ!)
+    path('<slug:slug>/', views.page_detail, name='page_detail'),
 ]

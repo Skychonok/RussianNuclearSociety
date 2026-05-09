@@ -1,0 +1,126 @@
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-custom {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-link-custom {
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 12px;
+    text-decoration: none;
+    transition: opacity 0.2s ease, color 0.3s ease;
+}
+
+.nav-link-custom:hover {
+    opacity: 0.7;
+}
+
+.sidebar-box {
+    border-radius: 20px;
+    padding: 30px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-control-custom {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-control-custom:focus {
+    box-shadow: none;
+    outline: 1px solid rgba(255,255,255,0.3);
+}
+
+.card-news {
+    border-radius: 24px;
+    padding: 30px;
+    height: 100%;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.card-news:hover {
+    transform: translateY(-4px);
+}
+
+.footer-custom {
+    padding: 2.5rem 0;
+    margin-top: auto;
+    border-top: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dropdown-menu-dark {
+    background-color: #312c49;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.dropdown-item {
+    color: #ffffff;
+}
+.dropdown-item:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: #ffffff;
+}
+
+.content-richtext img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+/* Макетные классы для адаптации цвета (для events) */
+:root {
+    --event-bg: #312c49;
+}
+
+[data-theme="light"] {
+    --event-bg: #c5c7d6;
+}
+
+/* Custom Dropdown Styling */
+.dropdown-menu-custom {
+    padding: 0.5rem 0;
+    margin-top: 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    min-width: 220px;
+}
+
+.dropdown-menu-custom .dropdown-item {
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover transitions for interactive cards */
+.transition-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.transition-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+}
+
+/* Custom outline button for generic usages in templates */
+.btn-outline-custom-light {
+    border: 1px solid rgba(255,255,255,0.7);
+    color: #ffffff;
+    background: transparent;
+    transition: all 0.2s ease;
+}

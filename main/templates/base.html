@@ -2,121 +2,173 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>{% block title %}Russian Nuclear Society{% endblock %}</title>
     <meta charset="UTF-8">
+    <title>{% if site_settings %}{{ site_settings.title }}{% else %}Ядерное общество{% endif %} - {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon-light.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
+    <link id="theme-link" rel="stylesheet" href="{% static 'css/theme-dark.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon-dark.ico' %}">
+
+    <script>
+        const staticCssUrl = "{% static 'css/' %}";
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.getElementById('theme-link').href = staticCssUrl + 'theme-' + savedTheme + '.css';
+    </script>
 </head>
 <body>
-    <nav class="navbar-custom">
-        <div class="container-fluid d-flex align-items-center">
-            <a href="{% url 'main:home' %}" class="d-flex align-items-center text-decoration-none">
-                <img src="{% static 'img/favicon-dark.ico' %}" alt="Russian Nuclear Society" class="navbar-logo">
+    <nav class="navbar-custom navbar-expand-lg">
+        <div class="container d-flex align-items-center">
+            <a href="{% url 'main:home' %}" class="text-decoration-none d-flex align-items-center me-4">
+                <img id="site-logo" src="" alt="Логотип" style="height: 45px;">
             </a>
-            <div class="d-flex align-items-center ms-auto">
-                <a class="nav-link-custom" href="{% url 'main:home' %}">Главная</a> 
-                <a class="nav-link-custom" href="{% url 'main:educ' %}">Образование и карьера</a> 
-                <a class="nav-link-custom" href="{% url 'main:materials' %}">Материалы</a> 
-                <a class="nav-link-custom" href="{% url 'main:events' %}">Мероприятия</a> 
-                <a class="nav-link-custom" href="{% url 'main:about_us' %}">О нас</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border-color: rgba(255,255,255,0.5);">
+                <i class="fas fa-bars" style="color: inherit;"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% for item in main_menu %}
+                        {% if item.children.all %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="drop{{ item.id }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ item.title }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-custom text-center" aria-labelledby="drop{{ item.id }}">
+                                    {% for child in item.children.all %}
+                                        <li><a class="dropdown-item py-2" href="{{ child.url }}">{{ child.title }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="{{ item.url }}">{{ item.title }}</a>
+                            </li>
+                        {% endif %}
+                    {% empty %}
+                        <!-- Резервные ссылки, строго по макету -->
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:home' %}">Главная</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:industry' %}">Атомная отрасль</a></li>
+                        
+                        <!-- Выпадающий список "Образование и карьера" -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-custom dropdown-toggle" href="{% url 'main:educ' %}" id="educDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Образование и карьера
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom text-center shadow-lg" aria-labelledby="educDrop">
+                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">МИФИ</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">МГУ</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">Карьера Росатом</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">Инженерный подкаст</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:materials' %}">Материалы</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:events' %}">Мероприятия</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:about_us' %}">О нас</a></li>
+                    {% endfor %}
+                </ul>
                 
-                {% if user.is_authenticated %}
-                    <a class="nav-link-custom" href="{% url 'main:profile' %}">Мой профиль</a>
-                    <a class="nav-link-custom" href="{% url 'main:logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        Выйти ({{ user.username }})
-                    </a>
-                    <form id="logout-form" method="post" action="{% url 'main:logout' %}" style="display: none;">
-                        {% csrf_token %}
-                    </form>
-                {% else %}
-                    <a class="nav-link-custom" href="{% url 'main:login' %}">Вход</a>
-                {% endif %}
-                
-                <button class="theme-toggle" id="themeToggle" title="Переключить тему">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
+                <div class="d-flex align-items-center gap-3">
+                    <button id="themeToggle" class="btn btn-outline-custom btn-sm rounded-pill px-3" title="Переключить тему">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </button>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'main:profile' %}" class="btn btn-outline-custom btn-sm rounded-pill px-3">
+                            <i class="fas fa-user"></i> {{ user.nickname|default:user.username }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
-    
-    <main class="container">
-        {% block content %}
 
-
+    <main class="container mt-5">
+        <!-- Блок-контейнер для управления макетом страниц (с или без сайдбара) -->
+        {% block main_container %}
+        <div class="row">
+            <div class="col-lg-8">
+                {% block content %}{% endblock %}
+            </div>
+            
+            <div class="col-lg-4 ps-lg-5">
+                {% block sidebar %}
+                {% include 'includes/sidebar.html' %}
+                
+                {% if sidebar_banners %}
+                    <div class="mt-4">
+                        {% for banner in sidebar_banners %}
+                            <div class="mb-3 rounded overflow-hidden">
+                                {% if banner.url %}<a href="{{ banner.url }}">{% endif %}
+                                {% if banner.image %}
+                                    <img src="{{ banner.image.url }}" class="img-fluid w-100" alt="{{ banner.title }}">
+                                {% else %}
+                                    <div class="p-3 bg-light text-dark">{{ banner.html_content|safe }}</div>
+                                {% endif %}
+                                {% if banner.url %}</a>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% endblock %}
+            </div>
+        </div>
         {% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="footer-custom mt-5 py-4">
-        <div class="container-fluid d-flex align-items-center">
-            <a href="{% url 'main:home' %}" class="d-flex align-items-center text-decoration-none">
-                <img src="{% static 'img/favicon-dark.ico' %}" alt="Russian Nuclear Society" class="footer-logo">
-            </a>
-            <div class="ms-auto">
-                <span class="footer-text">Официальный cайт Ядерного Общества © 2013-<span id="currentYear"></span></span>
-            </div>
+    <footer class="footer-custom mt-5">
+        <div class="container d-flex align-items-center">
+            <img id="footer-logo" src="" alt="Логотип" style="height: 30px; margin-right: 15px;">
+            <span class="opacity-75">{{ site_settings.footer_text|default:"Официальный сайт Ядерного общества" }} © 2013-{{ current_year }}</span>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Theme switching functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const themeToggle = document.getElementById('themeToggle');
+            const themeLink = document.getElementById('theme-link');
             const themeIcon = document.getElementById('themeIcon');
-            const body = document.body;
+            const siteLogo = document.getElementById('site-logo');
+            const footerLogo = document.getElementById('footer-logo');
+            const staticCssUrl = "{% static 'css/' %}";
             
-            // Check for saved theme preference or default to 'light'
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            
-            // Apply the saved theme
-            if (currentTheme === 'dark') {
-                body.setAttribute('data-theme', 'dark');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                body.removeAttribute('data-theme');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-            
-            // Theme toggle event listener
-            themeToggle.addEventListener('click', function() {
-                const isDark = body.getAttribute('data-theme') === 'dark';
-                
-                if (isDark) {
-                    // Switch to light theme
-                    body.removeAttribute('data-theme');
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
-                    localStorage.setItem('theme', 'light');
+            const iconDarkUrl = "{% static 'img/favicon-dark.ico' %}";
+            const iconLightUrl = "{% static 'img/favicon-light.ico' %}";
+
+            function updateThemeUI(theme) {
+                if (theme === 'light') {
+                    themeIcon.className = 'fas fa-moon';
+                    siteLogo.src = iconDarkUrl;
+                    footerLogo.src = iconDarkUrl;
                 } else {
-                    // Switch to dark theme
-                    body.setAttribute('data-theme', 'dark');
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
+                    themeIcon.className = 'fas fa-sun';
+                    siteLogo.src = iconLightUrl;
+                    footerLogo.src = iconLightUrl;
+                }
+            }
+
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            updateThemeUI(currentTheme);
+
+            themeToggle.addEventListener('click', () => {
+                if (themeLink.href.includes('theme-dark.css')) {
+                    themeLink.href = staticCssUrl + 'theme-light.css';
+                    localStorage.setItem('theme', 'light');
+                    updateThemeUI('light');
+                } else {
+                    themeLink.href = staticCssUrl + 'theme-dark.css';
                     localStorage.setItem('theme', 'dark');
+                    updateThemeUI('dark');
                 }
             });
-
-            // Active page highlighting
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link-custom');
-            
-            navLinks.forEach(link => {
-                const linkPath = new URL(link.href).pathname;
-                if (currentPath === linkPath || 
-                    (linkPath !== '/' && currentPath.startsWith(linkPath))) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Set current year in footer
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
         });
     </script>
 </body>
