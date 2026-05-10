@@ -55,24 +55,24 @@
                     {% empty %}
                         <!-- Резервные ссылки, строго по макету -->
                         <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:home' %}">Главная</a></li>
-                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:industry' %}">Атомная отрасль</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:page_detail' slug='industry' %}">Атомная отрасль</a></li>
                         
                         <!-- Выпадающий список "Образование и карьера" -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link nav-link-custom dropdown-toggle" href="{% url 'main:educ' %}" id="educDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link nav-link-custom dropdown-toggle" href="{% url 'main:page_detail' slug='educ' %}" id="educDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Образование и карьера
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom text-center shadow-lg" aria-labelledby="educDrop">
-                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">МИФИ</a></li>
-                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">МГУ</a></li>
-                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">Карьера Росатом</a></li>
-                                <li><a class="dropdown-item py-2" href="{% url 'main:educ' %}">Инженерный подкаст</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:page_detail' slug='educ' %}">МИФИ</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:page_detail' slug='educ' %}">МГУ</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:page_detail' slug='educ' %}">Карьера Росатом</a></li>
+                                <li><a class="dropdown-item py-2" href="{% url 'main:page_detail' slug='educ' %}">Инженерный подкаст</a></li>
                             </ul>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:materials' %}">Материалы</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:page_detail' slug='materials' %}">Материалы</a></li>
                         <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:events' %}">Мероприятия</a></li>
-                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:about_us' %}">О нас</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'main:page_detail' slug='about-us' %}">О нас</a></li>
                     {% endfor %}
                 </ul>
                 

@@ -56,26 +56,26 @@ def events_page(request):
     events = Event.objects.filter(is_active=True)
     return render(request, 'main/events.html', {'events': events})
 
-def about_us_page(request):
-    """Страница О нас"""
-    return render(request, 'main/about_us.html')
-
-def industry_page(request):
-    """Страница Атомная отрасль"""
-    return render(request, 'main/industry.html')
-
-def materials_page(request):
-    """Страница Материалы"""
-    return render(request, 'main/materials.html')
-
-def educ_page(request):
-    """Страница Образование и карьера"""
-    return render(request, 'main/educ.html')
-
 def page_detail(request, slug):
     """Универсальный обработчик для созданных в админке страниц"""
-    page = get_object_or_404(Page, slug=slug, is_active=True)
-    return render(request, 'main/page.html', {'page': page})
+    from django.template.loader import get_template
+    from django.template import TemplateDoesNotExist
+    from django.http import Http404
+    
+    # Пытаемся найти страницу в БД
+    page = Page.objects.filter(slug=slug, is_active=True).first()
+    
+    # Если slug содержит дефисы, заменяем на подчеркивания для поиска шаблона (например, about-us -> about_us.html)
+    template_name = f'main/{slug.replace("-", "_")}.html'
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist:
+        # Если специфичного шаблона нет, и страницы в БД тоже нет, то 404
+        if not page:
+            raise Http404("Страница не найдена")
+        template_name = 'main/page.html'
+        
+    return render(request, template_name, {'page': page})
 
 def login_page(request):
     # Если пользователь уже авторизован - перенаправляем на профиль

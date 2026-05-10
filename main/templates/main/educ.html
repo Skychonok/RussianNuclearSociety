@@ -6,42 +6,48 @@
 {% block main_container %}
 <div class="row mb-5">
     <div class="col-12">
-        <h1 class="fw-bold mb-4">Образование и карьера</h1>
+        <h1 class="fw-bold mb-4">{{ page.title|default:"Образование и карьера" }}</h1>
         
-        <div class="row g-4 mb-5">
-            <div class="col-md-6">
-                <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
-                    <i class="fas fa-university fa-3x mb-4 opacity-50"></i>
-                    <h3 class="fw-bold mb-3">МИФИ</h3>
-                    <p class="opacity-75 mb-4">Национальный исследовательский ядерный университет. Узнайте о доступных образовательных программах и факультетах.</p>
-                    <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Подробнее</a>
+        {% if page and page.content %}
+            <div class="content-richtext">
+                {{ page.content|safe }}
+            </div>
+        {% else %}
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
+                        <i class="fas fa-university fa-3x mb-4 opacity-50"></i>
+                        <h3 class="fw-bold mb-3">МИФИ</h3>
+                        <p class="opacity-75 mb-4">Национальный исследовательский ядерный университет. Узнайте о доступных образовательных программах и факультетах.</p>
+                        <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Подробнее</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
+                        <i class="fas fa-graduation-cap fa-3x mb-4 opacity-50"></i>
+                        <h3 class="fw-bold mb-3">МГУ</h3>
+                        <p class="opacity-75 mb-4">Московский государственный университет им. М.В. Ломоносова. Подготовка высококвалифицированных специалистов атомной отрасли.</p>
+                        <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Подробнее</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
+                        <i class="fas fa-briefcase fa-3x mb-4 opacity-50"></i>
+                        <h3 class="fw-bold mb-3">Карьера Росатом</h3>
+                        <p class="opacity-75 mb-4">Возможности трудоустройства, стажировки и карьерного развития в государственной корпорации по атомной энергии.</p>
+                        <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Перейти</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
+                        <i class="fas fa-podcast fa-3x mb-4 opacity-50"></i>
+                        <h3 class="fw-bold mb-3">Инженерный подкаст</h3>
+                        <p class="opacity-75 mb-4">Регулярные интервью с ведущими специалистами, обсуждение трендов, технологий и реального опыта работы.</p>
+                        <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Слушать</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
-                    <i class="fas fa-graduation-cap fa-3x mb-4 opacity-50"></i>
-                    <h3 class="fw-bold mb-3">МГУ</h3>
-                    <p class="opacity-75 mb-4">Московский государственный университет им. М.В. Ломоносова. Подготовка высококвалифицированных специалистов атомной отрасли.</p>
-                    <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Подробнее</a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
-                    <i class="fas fa-briefcase fa-3x mb-4 opacity-50"></i>
-                    <h3 class="fw-bold mb-3">Карьера Росатом</h3>
-                    <p class="opacity-75 mb-4">Возможности трудоустройства, стажировки и карьерного развития в государственной корпорации по атомной энергии.</p>
-                    <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Перейти</a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card-event shadow-sm h-100 p-4 p-md-5 rounded-4 text-center transition-hover d-flex flex-column" style="background-color: var(--event-bg, #312c49);">
-                    <i class="fas fa-podcast fa-3x mb-4 opacity-50"></i>
-                    <h3 class="fw-bold mb-3">Инженерный подкаст</h3>
-                    <p class="opacity-75 mb-4">Регулярные интервью с ведущими специалистами, обсуждение трендов, технологий и реального опыта работы.</p>
-                    <a href="#" class="btn btn-outline-custom-light mt-auto mx-auto px-4" style="border-radius: 8px; width: fit-content;">Слушать</a>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

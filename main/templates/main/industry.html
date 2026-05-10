@@ -6,50 +6,56 @@
 {% block main_container %}
 <div class="row mb-5">
     <div class="col-12">
-        <h1 class="fw-bold mb-4">Атомная отрасль</h1>
+        <h1 class="fw-bold mb-4">{{ page.title|default:"Атомная отрасль" }}</h1>
         
-        <!-- История создания -->
-        <div class="card-event shadow-sm mb-4 p-4 p-md-5 rounded-4" style="background-color: var(--event-bg, #312c49);">
-            <h3 class="fw-bold mb-3">История создания</h3>
-            <p class="mb-0 opacity-90 lh-lg">
-                4 февраля 2026 года прошло общее собрание членов МА "ОЯО". В результате голосования по повестке большинством голосов приняты решения:<br>
-                1. Утвердить годовой отчет о деятельности МА "ОЯО" в 2025 году.<br>
-                2. Избрать Председателем Президиума МА "ОЯО" Ковальчука Михаила Валентиновича.
-            </p>
-        </div>
+        {% if page and page.content %}
+            <div class="content-richtext">
+                {{ page.content|safe }}
+            </div>
+        {% else %}
+            <!-- История создания -->
+            <div class="card-event shadow-sm mb-4 p-4 p-md-5 rounded-4" style="background-color: var(--event-bg, #312c49);">
+                <h3 class="fw-bold mb-3">История создания</h3>
+                <p class="mb-0 opacity-90 lh-lg">
+                    4 февраля 2026 года прошло общее собрание членов МА "ОЯО". В результате голосования по повестке большинством голосов приняты решения:<br>
+                    1. Утвердить годовой отчет о деятельности МА "ОЯО" в 2025 году.<br>
+                    2. Избрать Председателем Президиума МА "ОЯО" Ковальчука Михаила Валентиновича.
+                </p>
+            </div>
 
-        <!-- Ряд с изображениями (1 превью + 4 пустых блока, как на макете) -->
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-sm-6 col-md">
-                <div class="ratio ratio-1x1 rounded-3 shadow-sm overflow-hidden" style="background-color: #2c2744;">
-                    <div class="d-flex align-items-center justify-content-center h-100 w-100 text-white opacity-25">
-                        <i class="fas fa-atom fa-4x"></i>
+            <!-- Ряд с изображениями (1 превью + 4 пустых блока, как на макете) -->
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-md">
+                    <div class="ratio ratio-1x1 rounded-3 shadow-sm overflow-hidden" style="background-color: #2c2744;">
+                        <div class="d-flex align-items-center justify-content-center h-100 w-100 text-white opacity-25">
+                            <i class="fas fa-atom fa-4x"></i>
+                        </div>
                     </div>
                 </div>
+                <div class="col-12 col-sm-6 col-md">
+                    <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
+                </div>
+                <div class="col-12 col-sm-6 col-md">
+                    <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
+                </div>
+                <div class="col-12 col-sm-6 col-md">
+                    <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
+                </div>
+                <div class="col-12 col-sm-6 col-md">
+                    <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
+                </div>
             </div>
-            <div class="col-12 col-sm-6 col-md">
-                <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
-            </div>
-            <div class="col-12 col-sm-6 col-md">
-                <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
-            </div>
-            <div class="col-12 col-sm-6 col-md">
-                <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
-            </div>
-            <div class="col-12 col-sm-6 col-md">
-                <div class="ratio ratio-1x1 rounded-3 shadow-sm" style="background-color: #d9d9d9;"></div>
-            </div>
-        </div>
 
-        <!-- Тенденции -->
-        <div class="card-event shadow-sm p-4 p-md-5 rounded-4" style="background-color: var(--event-bg, #312c49);">
-            <h3 class="fw-bold mb-3">Тенденции</h3>
-            <p class="mb-0 opacity-90 lh-lg">
-                4 февраля 2026 года прошло общее собрание членов МА "ОЯО". В результате голосования по повестке большинством голосов приняты решения:<br>
-                1. Утвердить годовой отчет о деятельности МА "ОЯО" в 2025 году.<br>
-                2. Избрать Председателем Президиума МА "ОЯО" Ковальчука Михаила Валентиновича.
-            </p>
-        </div>
+            <!-- Тенденции -->
+            <div class="card-event shadow-sm p-4 p-md-5 rounded-4" style="background-color: var(--event-bg, #312c49);">
+                <h3 class="fw-bold mb-3">Тенденции</h3>
+                <p class="mb-0 opacity-90 lh-lg">
+                    4 февраля 2026 года прошло общее собрание членов МА "ОЯО". В результате голосования по повестке большинством голосов приняты решения:<br>
+                    1. Утвердить годовой отчет о деятельности МА "ОЯО" в 2025 году.<br>
+                    2. Избрать Председателем Президиума МА "ОЯО" Ковальчука Михаила Валентиновича.
+                </p>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

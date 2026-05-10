@@ -79,7 +79,7 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS =[BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
@@ -87,6 +87,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # Включаем кастомную модель пользователя (ТЗ 3.3)
 AUTH_USER_MODEL = 'main.User'  

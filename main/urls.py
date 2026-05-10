@@ -7,12 +7,6 @@ app_name = 'main'
 urlpatterns =[
     path('', views.home_page, name='home'),
     path('events/', views.events_page, name='events'),
-    path('about-us/', views.about_us_page, name='about_us'),
-    
-    # Новые выделенные маршруты для вкладок согласно макетам
-    path('industry/', views.industry_page, name='industry'),
-    path('materials/', views.materials_page, name='materials'),
-    path('educ/', views.educ_page, name='educ'),
     
     # Авторизация и профиль
     path('accounts/login/', views.login_page, name='login'),
