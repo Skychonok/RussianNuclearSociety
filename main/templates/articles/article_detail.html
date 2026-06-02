@@ -1,224 +1,60 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}{{ article.title }} - {{ block.super }}{% endblock %}
-
-{% block meta_description %}{{ article.meta_description|default:article.excerpt }}{% endblock %}
-{% block meta_keywords %}{{ article.meta_keywords }}{% endblock %}
+{% block title %}{{ article.title }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <article>
-                <!-- Article Header -->
-                <header class="mb-4">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Главная</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'main:article_list' %}">Новости</a></li>
-                            {% if article.category %}
-                                <li class="breadcrumb-item">
-                                    <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
-                                </li>
-                            {% endif %}
-                            <li class="breadcrumb-item active" aria-current="page">{{ article.title|truncatewords:5 }}</li>
-                        </ol>
-                    </nav>
-
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            {% if article.category %}
-                                <span class="badge mb-2" style="background-color: {{ article.category.color }}">
-                                    {{ article.category.name }}
-                                </span>
-                            {% endif %}
-                            {% if article.is_featured %}
-                                <span class="badge bg-warning mb-2">Рекомендуем</span>
-                            {% endif %}
-                            {% if not article.is_published %}
-                                <span class="badge bg-secondary mb-2">Черновик</span>
-                            {% endif %}
-                        </div>
-                        
-                        {% if can_edit %}
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-cog"></i> Управление
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ article.get_edit_url }}">
-                                        <i class="fas fa-edit"></i> Редактировать
-                                    </a></li>
-                                    {% if article.can_delete %}
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item text-danger" href="{{ article.get_delete_url }}">
-                                            <i class="fas fa-trash"></i> Удалить
-                                        </a></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <h1 class="mb-3">{{ article.title }}</h1>
-
-                    <div class="d-flex flex-wrap align-items-center text-muted mb-4">
-                        <div class="me-3">
-                            <i class="fas fa-user"></i> 
-                            {{ article.author.get_full_name|default:article.author.username }}
-                        </div>
-                        <div class="me-3">
-                            <i class="fas fa-calendar"></i> 
-                            {{ article.published_at|default:article.created_at|date:"d F Y" }}
-                        </div>
-                        <div class="me-3">
-                            <i class="fas fa-eye"></i> 
-                            {{ article.view_count }} просмотров
-                        </div>
-                        <div class="me-3">
-                            <i class="fas fa-clock"></i> 
-                            {{ article.reading_time }} мин чтения
-                        </div>
-                    </div>
-                </header>
-
-                <!-- Featured Image -->
-                {% if article.featured_image %}
-                    <div class="mb-4">
-                        <img src="{{ article.featured_image.url }}" 
-                             class="img-fluid rounded" 
-                             alt="{{ article.featured_image_alt|default:article.title }}">
-                    </div>
-                {% endif %}
-
-                <!-- Article Content -->
-                <div class="article-content">
-                    {{ article.content|linebreaks }}
-                </div>
-
-                <!-- Tags -->
-                {% if article.tags.exists %}
-                    <div class="mt-4 pt-4 border-top">
-                        <h6>Теги:</h6>
-                        {% for tag in article.tags.all %}
-                            <a href="{{ tag.get_absolute_url }}" class="btn btn-outline-primary btn-sm me-2 mb-2">
-                                #{{ tag.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <!-- Share Buttons -->
-                <div class="mt-4 pt-4 border-top">
-                    <h6>Поделиться:</h6>
-                    <div class="d-flex gap-2">
-                        <a href="https://vk.com/share.php?url={{ request.build_absolute_uri }}&title={{ article.title|urlencode }}" 
-                           target="_blank" class="btn btn-outline-primary btn-sm">
-                            <i class="fab fa-vk"></i> VK
-                        </a>
-                        <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" 
-                           target="_blank" class="btn btn-outline-primary btn-sm">
-                            <i class="fab fa-telegram"></i> Telegram
-                        </a>
-                        <a href="mailto:?subject={{ article.title|urlencode }}&body={{ request.build_absolute_uri }}" 
-                           class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-envelope"></i> Email
-                        </a>
-                    </div>
-                </div>
-            </article>
+<div class="card-event shadow-sm mb-5">
+    {% if not article.hide_title %}
+        <h1 class="fw-bold mb-3">{{ article.title }}</h1>
+    {% endif %}
+    
+    {% if not article.hide_author_and_date %}
+        <div class="opacity-75 mb-4">
+            <i class="fas fa-calendar me-2"></i> {{ article.published_at|default:article.created_at|date:"d.m.Y" }}
+            <i class="fas fa-user ms-3 me-2"></i> {{ article.author.nickname|default:article.author.get_full_name|default:article.author.username }}
         </div>
+    {% endif %}
 
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Author Info -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Об авторе</h5>
-                </div>
-                <div class="card-body">
-                    <h6>{{ article.author.get_full_name|default:article.author.username }}</h6>
-                    {% if article.author.bio %}
-                        <p class="small">{{ article.author.bio }}</p>
-                    {% endif %}
-                    <small class="text-muted">
-                        Статей: {{ article.author.articles.published.count }}
-                    </small>
-                </div>
-            </div>
+    {% if article.featured_image %}
+        <img src="{{ article.featured_image.url }}" class="img-fluid rounded-4 mb-4" alt="Превью">
+    {% endif %}
 
-            <!-- Related Articles -->
-            {% if related_articles %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Похожие статьи</h5>
-                    </div>
-                    <div class="card-body">
-                        {% for related in related_articles %}
-                            <div class="{% if not forloop.last %}border-bottom pb-3 mb-3{% endif %}">
-                                {% if related.featured_image %}
-                                    <img src="{{ related.featured_image.url }}" 
-                                         class="img-fluid rounded mb-2" 
-                                         alt="{{ related.title }}"
-                                         style="height: 100px; width: 100%; object-fit: cover;">
-                                {% endif %}
-                                <h6>
-                                    <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
-                                        {{ related.title }}
-                                    </a>
-                                </h6>
-                                <small class="text-muted">
-                                    {{ related.published_at|default:related.created_at|date:"d.m.Y" }}
-                                </small>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-
-            <!-- Back to List -->
-            <div class="card">
-                <div class="card-body text-center">
-                    <a href="{% url 'main:article_list' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left"></i> Все новости
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="article-content">
+        <!-- Текст из WYSIWYG -->
+        {{ article.content|safe }}
     </div>
 </div>
 
-<style>
-.article-content {
-    line-height: 1.8;
-    font-size: 1.1rem;
-}
+<!-- Комментарии (ТЗ 3.14) -->
+<div class="mt-5">
+    <h3 class="fw-bold mb-4">Комментарии ({{ article.comments.count }})</h3>
+    
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'main:add_comment' article.slug %}" class="mb-5">
+            {% csrf_token %}
+            <textarea name="text" rows="3" class="form-control form-control-custom mb-3" placeholder="Написать комментарий..." required></textarea>
+            <button type="submit" class="btn btn-outline-custom px-4 rounded-3">Отправить</button>
+            <div class="form-text text-warning mt-2"><i class="fas fa-info-circle"></i> Комментарий появится после проверки модератором.</div>
+        </form>
+    {% else %}
+        <div class="alert alert-secondary rounded-3" style="background: var(--widget-bg); border:none; color: var(--text-main);">
+            Только зарегистрированные пользователи могут оставлять комментарии. <a href="{% url 'main:login' %}" style="color:inherit; text-decoration:underline;">Войдите</a> в систему.
+        </div>
+    {% endif %}
 
-.article-content p {
-    margin-bottom: 1.5rem;
-}
-
-.article-content h2, .article-content h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-.article-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
-}
-
-.article-content blockquote {
-    border-left: 4px solid #007bff;
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    font-style: italic;
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.25rem;
-}
-</style>
+    <div class="comments-list">
+        {% for comment in article.comments.all %}
+            {% if comment.is_approved or user.is_staff %}
+            <div class="sidebar-box p-4 mb-3 position-relative">
+                {% if not comment.is_approved %}
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-3">Ждет проверки</span>
+                {% endif %}
+                <h6 class="fw-bold">{{ comment.author.nickname|default:comment.author.username }} <span class="fw-normal opacity-50 ms-2">{{ comment.created_at|date:"d.m.Y H:i" }}</span></h6>
+                <p class="mb-0 mt-2">{{ comment.text }}</p>
+            </div>
+            {% endif %}
+        {% empty %}
+            <p class="opacity-50">Здесь пока нет комментариев.</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

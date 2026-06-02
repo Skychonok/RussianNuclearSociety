@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -12,42 +12,70 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.db import transaction
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
-from .models import Article, Category, Tag
-from .forms import ArticleForm, CategoryForm, TagForm, ArticleSearchForm, ArticlePublishForm
+from .models import Article, Comment, Category, Tag, Page, Event
+from .forms import ArticleForm, CategoryForm, TagForm, ArticleSearchForm, ArticlePublishForm, UserProfileForm
+
+
+def search_view(request):
+    query = request.GET.get('q', '')
+    results =[]
+    if query:
+        # ИСПРАВЛЕНИЕ: Используем .published(), чтобы исключить is_deleted=True
+        results = Article.objects.published().filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(excerpt__icontains=query)
+        ).order_by('-created_at')
+    
+    return render(request, 'main/search_results.html', {'results': results, 'query': query})
+
+@login_required
+def add_comment(request, slug):
+    if request.method == 'POST':
+        article = get_object_or_404(Article, slug=slug)
+        text = request.POST.get('text')
+        if text:
+            # Комментарий создается неодобренным (премодерация)
+            Comment.objects.create(article=article, author=request.user, text=text)
+    return redirect(article.get_absolute_url())
 
 
 
 def home_page(request):
-    """Home page with news content."""
-    # Get featured articles
-    featured_articles = Article.objects.published().filter(is_featured=True)[:3]
-    
-    # Get latest articles
-    latest_articles = Article.objects.published()[:6]
-    
-    # Get categories with article counts
-    categories = Category.objects.filter(is_active=True)
-    
-    context = {
-        'featured_articles': featured_articles,
-        'latest_articles': latest_articles,
-        'categories': categories,
-    }
-    
-    return render(request, 'main/home.html', context)
-
-def educ_page(request):
-    return render(request, 'main/educ.html')
+    """Главная страница с 4 плитками новостей"""
+    # Выводим последние 4 опубликованные статьи
+    latest_news = Article.objects.published()[:4]
+    return render(request, 'main/home.html', {'latest_news': latest_news})
 
 def events_page(request):
-    return render(request, 'main/events.html')
+    """Страница мероприятий"""
+    events = Event.objects.filter(is_active=True)
+    return render(request, 'main/events.html', {'events': events})
 
-def materials_page(request):
-    return render(request, 'main/materials.html')
-
-def about_us_page(request):
-    return render(request, 'main/about_us.html')
+def page_detail(request, slug):
+    """Универсальный обработчик для созданных в админке страниц"""
+    from django.template.loader import get_template
+    from django.template import TemplateDoesNotExist
+    from django.http import Http404
+    
+    # Пытаемся найти страницу в БД
+    page = Page.objects.filter(slug=slug, is_active=True).first()
+    
+    # Если slug содержит дефисы, заменяем на подчеркивания для поиска шаблона (например, about-us -> about_us.html)
+    template_name = f'main/{slug.replace("-", "_")}.html'
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist:
+        # Если специфичного шаблона нет, и страницы в БД тоже нет, то 404
+        if not page:
+            raise Http404("Страница не найдена")
+        template_name = 'main/page.html'
+        
+    return render(request, template_name, {'page': page})
 
 def login_page(request):
     # Если пользователь уже авторизован - перенаправляем на профиль
@@ -73,23 +101,21 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
+    """Безопасное обновление профиля через ModelForm"""
     if request.method == 'POST':
-        username = request.POST.get('username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        
-        user = request.user
-        user.username = username
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
-        user.save()
-        
-        messages.success(request, 'Ваш профиль был успешно обновлен!')
-        return redirect('main:profile')
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Ваш профиль был успешно обновлен!')
+            return redirect('main:profile')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = UserProfileForm(instance=request.user)
     
-    return render(request, 'accounts/profile.html')
+    return render(request, 'accounts/profile.html', {'form': form})
 
 
 # Mixins for permission checking

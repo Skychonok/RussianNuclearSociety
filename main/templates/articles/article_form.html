@@ -7,7 +7,7 @@
 
 {% block extra_head %}
 <!-- TinyMCE Rich Text Editor -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         tinymce.init({
@@ -23,6 +23,7 @@
             branding: false,
             promotion: false,
             language: 'ru',
+            language_url: 'https://cdn.jsdelivr.net/npm/tinymce-i18n@23.10.9/langs6/ru.js',
             setup: function(editor) {
                 editor.on('change', function() {
                     editor.save();
