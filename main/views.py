@@ -117,6 +117,18 @@ def profile_view(request):
     
     return render(request, 'accounts/profile.html', {'form': form})
 
+@login_required
+def toggle_newsletter(request):
+    user = request.user
+    user.newsletter_subscribed = not user.newsletter_subscribed
+    user.save(update_fields=["newsletter_subscribed"])
+
+    messages.success(
+        request,
+        "Подписка обновлена"
+    )
+
+    return redirect('main:profile')
 
 # Mixins for permission checking
 class ContentManagerRequiredMixin(UserPassesTestMixin):
@@ -395,3 +407,4 @@ def article_management_dashboard(request):
     }
     
     return render(request, 'articles/management_dashboard.html', context)
+

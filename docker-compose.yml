@@ -4,9 +4,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=rns_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_DB: rns_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     healthcheck:
@@ -14,6 +14,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
 
   web:
     build: .
@@ -23,13 +28,28 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/rns_db
-      - DEBUG=True
-      - SECRET_KEY=django-insecure-+93+ew@f--o00sxm_a*4pigx3_v9m-t_!^7pgci_%$$md%$$0c#j
-      - ALLOWED_HOSTS=*
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rns_db
+      DEBUG: "True"
+      SECRET_KEY: django-insecure-+93+ew@f--o00sxm_a*4pigx3_v9m-t_!^7pgci_%$$md%$$0c#j
+      ALLOWED_HOSTS: "*"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery:
+    build: .
+    command: celery -A rns worker -l info
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rns_db
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - redis
+      - db
 
 volumes:
   postgres_data:

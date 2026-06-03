@@ -22,7 +22,7 @@ class SiteSettings(models.Model):
         verbose_name_plural = "Настройки сайта"
 
     def save(self, *args, **kwargs):
-        self.pk = 1 # Гарантируем, что запись всегда одна (Singleton)
+        self.pk = 1
         super().save(*args, **kwargs)
 
     @classmethod
@@ -37,6 +37,7 @@ class User(AbstractUser):
     """Кастомная модель пользователя с расширенными полями (ТЗ 3.3)"""
     nickname = models.CharField(max_length=50, blank=True, verbose_name="Никнейм")
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True, verbose_name="Аватар")
+    newsletter_subscribed = models.BooleanField(default=True, verbose_name="Подписка на рассылку")
 
     class Meta:
         verbose_name = "Пользователь"
@@ -231,6 +232,11 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = ArticleManager()
+
+    newsletter_sent = models.BooleanField(
+        default=False,
+        verbose_name="Рассылка отправлена"
+    )
 
     class Meta:
         ordering = ["-order", "-created_at"]

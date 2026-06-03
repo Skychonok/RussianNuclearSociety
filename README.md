@@ -1,65 +1,129 @@
 # Russian Nuclear Society
 
-Django project for the Russian Nuclear Society portal.
+Django-based portal for the Russian Nuclear Society.
 
 ## Requirements
 
-- Python 3.13 (recommended to use a virtual environment)
-- PostgreSQL server (defaults: database `rns_db`, user `postgres`, password `postgres`, host `localhost`, port `5432`)
-- Node.js is not required for local development
+- Docker Desktop
+- Docker Compose
 
-Install Python dependencies:
+Check installation:
 
 ```bash
-pip install -r requirements.txt
+docker --version
+docker compose version
 ```
 
-## Environment configuration
+## Getting Started
 
-Create a `.env` file (or set environment variables) if you need to override defaults:
+### 1. Clone the repository
 
+```bash
+git clone <repository-url>
+cd RussianNuclearSociety
 ```
+
+### 2. Log in to Docker Hub
+
+```bash
+docker login
+```
+
+### 3. Build and start containers
+
+```bash
+docker compose up --build
+```
+
+For background mode:
+
+```bash
+docker compose up -d --build
+```
+
+## Database Setup
+
+Apply Django migrations:
+
+```bash
+docker compose exec web python manage.py migrate
+```
+
+Create an administrator account:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+## Accessing the Application
+
+After startup, the site will be available at:
+
+- http://localhost:8000/
+- http://127.0.0.1:8000/
+
+Admin panel:
+
+- http://localhost:8000/admin/
+- http://127.0.0.1:8000/admin/
+
+## Useful Commands
+
+### View running containers
+
+```bash
+docker compose ps
+```
+
+### View logs
+
+```bash
+docker compose logs -f
+```
+
+### Open a shell inside the web container
+
+```bash
+docker compose exec web sh
+```
+
+### Stop containers
+
+```bash
+docker compose down
+```
+
+### Stop containers and remove database volume
+
+```bash
+docker compose down -v
+```
+
+> Warning: `docker compose down -v` permanently deletes the PostgreSQL database stored in Docker volumes.
+
+## Environment Variables
+
+Default database configuration:
+
+```env
 POSTGRES_DB=rns_db
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=pogres
-POSTGRES_HOST=localhost
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=db
 POSTGRES_PORT=5432
-POSTGRES_CONN_MAX_AGE=0
 ```
 
-## Database setup
+## Development
 
-Run database migrations:
+Run migrations after model changes:
 
 ```bash
-python manage.py migrate
+docker compose exec web python manage.py makemigrations
+docker compose exec web python manage.py migrate
 ```
-
-## Running the development server
-
-Start the server:
-
-```bash
-python manage.py runserver
-```
-
-The site will be available at:
-
-- http://127.0.0.1:8000/
-- http://localhost:8000/
-
-Static files are served from the `static/` directory in development.
-
-## Useful commands
-
-Create a superuser for admin access:
-
-```bash
-python manage.py createsuperuser
-```
-
 
 Run tests:
 
 ```bash
-python manage.py test
+docker compose exec web python manage.py test
+```

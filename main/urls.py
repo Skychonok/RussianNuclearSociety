@@ -57,6 +57,16 @@ urlpatterns =[
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('main:password_reset_complete')), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     
+    # mailing
+    path(
+    "profile/newsletter/",
+    views.toggle_newsletter,
+    name="toggle_newsletter",
+    ),
+
+
     # Динамические страницы (ДОЛЖНЫ БЫТЬ В САМОМ КОНЦЕ!)
     path('<slug:slug>/', views.page_detail, name='page_detail'),
+
+    
 ]

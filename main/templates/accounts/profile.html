@@ -23,34 +23,45 @@
                             <div class="col-md-6">
                                 <h5>Информация о пользователе</h5>
                                 
-                                <div class="mb-3">
-                                    <label class="form-label"><strong>Имя пользователя:</strong></label>
-                                    <input type="text" class="form-control" name="username" value="{{ user.username }}">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label"><strong>Email:</strong></label>
-                                    <input type="email" class="form-control" name="email" value="{{ user.email|default:'' }}">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label"><strong>Имя:</strong></label>
-                                    <input type="text" class="form-control" name="first_name" value="{{ user.first_name|default:'' }}">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label"><strong>Фамилия:</strong></label>
-                                    <input type="text" class="form-control" name="last_name" value="{{ user.last_name|default:'' }}">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}
-                                </div>
-                                
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-                                    <a href="{% url 'main:password_change' %}" class="btn btn-outline-secondary">Сменить пароль</a>
-                                </div>
+                                <form method="post">
+                                    {% csrf_token %}
+
+                                    <div class="mb-3">
+                                        <label>Username</label>
+                                        <input class="form-control" name="username" value="{{ user.username }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Email</label>
+                                        <input class="form-control" name="email" value="{{ user.email }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Имя</label>
+                                        <input class="form-control" name="first_name" value="{{ user.first_name }}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Фамилия</label>
+                                        <input class="form-control" name="last_name" value="{{ user.last_name }}">
+                                    </div>
+
+                                    <button class="btn btn-primary">Сохранить профиль</button>
+                                </form>
+
+                                <hr>
+
+                                <form method="post" action="{% url 'main:toggle_newsletter' %}">
+                                    {% csrf_token %}
+
+                                    <button class="btn {% if user.newsletter_subscribed %}btn-danger{% else %}btn-success{% endif %}">
+                                        {% if user.newsletter_subscribed %}
+                                            Отписаться от рассылки
+                                        {% else %}
+                                            Подписаться на рассылку
+                                        {% endif %}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </form>
