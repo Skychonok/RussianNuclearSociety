@@ -127,3 +127,21 @@ Run tests:
 ```bash
 docker compose exec web python manage.py test
 ```
+
+Debuging
+```bash
+docker compose exec web python manage.py shell
+
+
+from django.core.mail import send_mail
+
+send_mail(
+    "test",
+    "hello",
+    "from@gmail.com",
+    ["to@gmail.com"]
+)
+
+
+
+```
