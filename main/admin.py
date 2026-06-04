@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from .tasks import send_article_newsletter
 
 from .models import (
     User,
@@ -118,24 +119,9 @@ class ArticleAdmin(TinyMCEAdminMixin, admin.ModelAdmin):
     )
 
     def save_model(self, request, obj, form, change):
-        send_newsletter = False
-
-        if change:
-            old_obj = Article.objects.get(pk=obj.pk)
-
-            send_newsletter = (
-                not old_obj.is_published
-                and obj.is_published
-                and not obj.newsletter_sent
-            )
-
         super().save_model(request, obj, form, change)
 
-        if send_newsletter:
-            from .tasks import send_article_newsletter
-
-            send_article_newsletter.delay(str(obj.pk))
-
-            Article.objects.filter(pk=obj.pk).update(
-                newsletter_sent=True
-            )
+        if obj.is_published and not obj.newsletter_sent:
+            send_article_newsletter.delay(obj.pk)
+            obj.newsletter_sent = True
+            obj.save(update_fields=["newsletter_sent"])
