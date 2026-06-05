@@ -143,5 +143,7 @@ send_mail(
 )
 
 
+всегда после изменения tasks.py:
+docker compose restart celery
 
 ```

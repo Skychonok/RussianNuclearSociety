@@ -6,6 +6,7 @@ from django.utils.html import strip_tags
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 import uuid
+from django.conf import settings
 
 # === Настройки сайта (Singleton) ===
 
@@ -323,3 +324,36 @@ class Comment(models.Model):
         ordering = ['-created_at']
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
+
+class EmailCampaign(models.Model):
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Получатель"
+    )
+
+    subject = models.CharField(
+        max_length=255,
+        verbose_name="Тема"
+    )
+
+    message = models.TextField(
+        verbose_name="Сообщение",
+        default=""
+    )
+
+    sent = models.BooleanField(
+        default=False,
+        verbose_name="Отправлено"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        verbose_name = "Письмо"
+        verbose_name_plural = "Письма"
+
+    def __str__(self):
+        return self.subject

@@ -68,3 +68,28 @@ def send_article_newsletter(self, article_id):
         "sent": sent,
         "failed": failed
     }
+
+@shared_task(bind=True, max_retries=3, default_retry_delay=60)
+def send_email_task(self, subject, template_name, context, recipient_list):
+    from django.core.mail import EmailMultiAlternatives
+    from django.template.loader import render_to_string
+    from django.conf import settings
+
+    try:
+        html_content = render_to_string(template_name, context)
+
+        for email in recipient_list:
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body="HTML версия письма",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email],
+            )
+
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+        return {"sent": len(recipient_list)}
+
+    except Exception as e:
+        raise self.retry(exc=e)

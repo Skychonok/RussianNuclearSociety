@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{{ subject|default:"Сообщение с сайта" }}</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,sans-serif;">
+
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:24px;">
+
+    <h1 style="color:#111827;font-size:20px;margin-bottom:10px;">
+      {{ subject|default:"Сообщение с сайта" }}
+    </h1>
+
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
+
+    <div style="color:#111827;font-size:15px;line-height:1.6;">
+      {% if text %}
+        <p>{{ text }}</p>
+      {% elif article %}
+        <h2 style="font-size:18px;">{{ article.title }}</h2>
+        <p style="color:#6b7280;font-size:13px;">
+          {{ article.created_at|date:"d.m.Y H:i" }}
+        </p>
+
+        <div>
+          {{ article.content|striptags|truncatechars:800 }}
+        </div>
+
+        <div style="margin-top:20px;text-align:center;">
+          <a href="{{ article_url }}"
+             style="background:#2563eb;color:#ffffff;padding:12px 18px;
+                    text-decoration:none;border-radius:6px;display:inline-block;">
+            Читать полностью
+          </a>
+        </div>
+      {% else %}
+        <p>Нет содержимого письма.</p>
+      {% endif %}
+    </div>
+
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:25px 0;">
+
+    <p style="font-size:12px;color:#9ca3af;text-align:center;">
+      Вы получили это письмо от сайта RNS.
+    </p>
+
+  </div>
+
+</body>
+</html>
