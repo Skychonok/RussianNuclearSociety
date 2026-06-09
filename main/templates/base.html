@@ -81,9 +81,35 @@
                         <i class="fas fa-sun" id="themeIcon"></i>
                     </button>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'main:profile' %}" class="btn btn-outline-custom btn-sm rounded-pill px-3">
-                            <i class="fas fa-user"></i> {{ user.nickname|default:user.username }}
-                        </a>
+                    <div class="profile-dropdown">
+                        <button type="button" class="btn btn-outline-custom btn-sm rounded-pill px-3 profile-btn">
+                            <i class="fas fa-user"></i>
+                            {{ user.nickname|default:user.username }}
+                        </button>
+
+                        <div class="profile-menu">
+                            <div class="dropdown-header">
+                                <strong>{{ user.nickname|default:user.username }}</strong>
+                                <span>{{ user.email }}</span>
+                            </div>
+                            
+                            <a href="{% url 'main:profile' %}">
+                                Профиль
+                            </a>
+
+                            <a href="#">
+                                Настройки
+                            </a>
+
+                            <a href="#">
+                                Сообщить об ошибке
+                            </a>
+
+                            <a href="{% url 'logout' %}">
+                                Выйти
+                            </a>
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -132,48 +158,100 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(el => el.remove());
-        }, 3000);
-        
         document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('themeToggle');
-            const themeLink = document.getElementById('theme-link');
-            const themeIcon = document.getElementById('themeIcon');
-            const siteLogo = document.getElementById('site-logo');
-            const footerLogo = document.getElementById('footer-logo');
-            const staticCssUrl = "{% static 'css/' %}";
-            
-            const iconDarkUrl = "{% static 'img/favicon-dark.ico' %}";
-            const iconLightUrl = "{% static 'img/favicon-light.ico' %}";
 
-            function updateThemeUI(theme) {
-                if (theme === 'light') {
-                    themeIcon.className = 'fas fa-moon';
-                    siteLogo.src = iconDarkUrl;
-                    footerLogo.src = iconDarkUrl;
-                } else {
-                    themeIcon.className = 'fas fa-sun';
-                    siteLogo.src = iconLightUrl;
-                    footerLogo.src = iconLightUrl;
-                }
+        // =========================
+        // THEME SWITCH
+        // =========================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLink = document.getElementById('theme-link');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const siteLogo = document.getElementById('site-logo');
+        const footerLogo = document.getElementById('footer-logo');
+
+        const staticCssUrl = "/static/css/"; // можно оставить как у тебя через Django
+
+        const iconDarkUrl = "/static/img/favicon-dark.ico";
+        const iconLightUrl = "/static/img/favicon-light.ico";
+
+        function updateThemeUI(theme) {
+            if (theme === 'light') {
+                themeIcon.className = 'fas fa-moon';
+                siteLogo.src = iconDarkUrl;
+                footerLogo.src = iconDarkUrl;
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                siteLogo.src = iconLightUrl;
+                footerLogo.src = iconLightUrl;
             }
+        }
 
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-            updateThemeUI(currentTheme);
+        const currentTheme = localStorage.getItem('theme') || 'dark';
 
+        // применяем тему при загрузке
+        if (themeLink) {
+            themeLink.href = `${staticCssUrl}theme-${currentTheme}.css`;
+        }
+        updateThemeUI(currentTheme);
+
+        if (themeToggle) {
             themeToggle.addEventListener('click', () => {
-                if (themeLink.href.includes('theme-dark.css')) {
-                    themeLink.href = staticCssUrl + 'theme-light.css';
+                const isDark = themeLink.href.includes('theme-dark.css');
+
+                if (isDark) {
+                    themeLink.href = `${staticCssUrl}theme-light.css`;
                     localStorage.setItem('theme', 'light');
                     updateThemeUI('light');
                 } else {
-                    themeLink.href = staticCssUrl + 'theme-dark.css';
+                    themeLink.href = `${staticCssUrl}theme-dark.css`;
                     localStorage.setItem('theme', 'dark');
                     updateThemeUI('dark');
                 }
             });
-        });
+        }
+
+        // =========================
+        // PROFILE DROPDOWN
+        // =========================
+        const dropdown = document.querySelector('.profile-dropdown');
+        const button = document.querySelector('.profile-btn');
+
+        if (dropdown && button) {
+
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                console.log("CLICKED");
+
+                dropdown.classList.toggle('active');
+
+                console.log("ACTIVE STATE:", dropdown.classList.contains('active'));
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // закрытие по ESC (очень полезно)
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // =========================
+        // AUTO REMOVE ALERTS
+        // =========================
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(el => el.remove());
+        }, 3000);
+
+    });
     </script>
 </body>
 </html>

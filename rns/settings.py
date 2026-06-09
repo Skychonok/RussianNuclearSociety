@@ -90,7 +90,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
-# Включаем кастомную модель пользователя (ТЗ 3.3)
 AUTH_USER_MODEL = 'main.User'  
 
 LOGIN_REDIRECT_URL = '/accounts/profile/'
@@ -99,7 +98,7 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
