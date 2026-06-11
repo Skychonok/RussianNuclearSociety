@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
-from .models import Article, Category, Tag
+from .models import Article, Category, Tag, BugReport
 
 User = get_user_model()
 
@@ -270,3 +270,12 @@ class ArticlePublishForm(forms.Form):
         ],
         widget=forms.HiddenInput()
     )
+
+class BugReportForm(forms.ModelForm):
+    class Meta:
+        model = BugReport
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Кратко опишите проблему'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Подробное описание'}),
+        }

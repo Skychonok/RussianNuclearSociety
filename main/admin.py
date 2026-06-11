@@ -124,6 +124,8 @@ class PageAdmin(TinyMCEAdminMixin, admin.ModelAdmin):
     list_display = ('title', 'slug', 'is_active', 'updated_at')
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title', 'content')
+    list_filter = ('is_active',)
+    list_editable = ('is_active',)
 
 
 # -----------------------------
@@ -159,9 +161,10 @@ class MenuItemAdmin(admin.ModelAdmin):
 # -----------------------------
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'columns_count')
+    list_display = ('name', 'parent', 'columns_count', 'is_active')
+    list_filter = ('is_active', 'parent')
+    list_editable = ('is_active',)
     prepopulated_fields = {'slug': ('name',)}
-
 
 # -----------------------------
 # BANNER
@@ -218,3 +221,4 @@ class ArticleAdmin(TinyMCEAdminMixin, admin.ModelAdmin):
 
             obj.newsletter_sent = True
             obj.save(update_fields=["newsletter_sent"])
+

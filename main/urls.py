@@ -64,6 +64,8 @@ urlpatterns =[
     name="toggle_newsletter",
     ),
 
+    # Bug report
+    path('report-bug/', views.report_bug, name='report_bug'),
 
     # Динамические страницы (ДОЛЖНЫ БЫТЬ В САМОМ КОНЦЕ!)
     path('<slug:slug>/', views.page_detail, name='page_detail'),

@@ -49,7 +49,6 @@ TEMPLATES =[
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # Глобальный контекст для меню, футера и настроек
                 'main.context_processors.global_site_context',
             ],
         },

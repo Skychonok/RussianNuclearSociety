@@ -1,4 +1,5 @@
 {% load static %}
+{% if not user.is_authenticated %}
 <!-- Блок Входа -->
 <div class="sidebar-box mb-4">
     <h4 class="mb-4 text-center fw-bold">Вход</h4>
@@ -9,14 +10,21 @@
         <button type="submit" class="btn btn-login w-100 mt-2">Войти</button>
     </form>
 </div>
+{% endif %}
 
+{% if user.is_authenticated and not user.newsletter_subscribed %}
 <!-- Блок Подписки -->
 <div class="sidebar-box mb-4">
     <h5 class="fw-bold mb-3">Подписка на новости</h5>
     <p class="small opacity-75 mb-3">Получайте последние новости на почту.</p>
-    <input type="email" class="form-control form-control-custom" placeholder="Ваш email">
+    <form method="post" action="{% url 'main:toggle_newsletter' %}">
+        {% csrf_token %}
+        <button class="btn btn-success">
+            Подписаться на рассылку
+        </button>
+    </form>
 </div>
-
+{% endif %}
 <!-- Блок О нас -->
 <div class="sidebar-box">
     <h5 class="fw-bold mb-3">О нас</h5>

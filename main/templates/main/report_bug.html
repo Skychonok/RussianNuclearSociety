@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Сообщить об ошибке{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h3 class="mb-4 text-center">Сообщить об ошибке</h3>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            {{ form.title }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description }}
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100">
+                            Отправить
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

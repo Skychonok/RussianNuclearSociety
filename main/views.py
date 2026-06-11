@@ -16,8 +16,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from .models import Article, Comment, Category, Tag, Page, Event
-from .forms import ArticleForm, CategoryForm, TagForm, ArticleSearchForm, ArticlePublishForm, UserProfileForm
+from .models import Article, Comment, Category, Tag, Page, Event, BugReport
+from .forms import ArticleForm, CategoryForm, TagForm, ArticleSearchForm, ArticlePublishForm, UserProfileForm, BugReportForm
 
 
 def search_view(request):
@@ -62,15 +62,23 @@ def page_detail(request, slug):
     from django.template import TemplateDoesNotExist
     from django.http import Http404
     
-    # Пытаемся найти страницу в БД
-    page = Page.objects.filter(slug=slug, is_active=True).first()
+    page = get_object_or_404(
+        Page,
+        slug=slug
+    )
+
+    if not page.is_active:
+        return render(
+            request,
+            'main/page_disabled.html',
+            {'page': page}
+        )
     
     # Если slug содержит дефисы, заменяем на подчеркивания для поиска шаблона (например, about-us -> about_us.html)
     template_name = f'main/{slug.replace("-", "_")}.html'
     try:
         get_template(template_name)
     except TemplateDoesNotExist:
-        # Если специфичного шаблона нет, и страницы в БД тоже нет, то 404
         if not page:
             raise Http404("Страница не найдена")
         template_name = 'main/page.html'
@@ -78,7 +86,6 @@ def page_detail(request, slug):
     return render(request, template_name, {'page': page})
 
 def login_page(request):
-    # Если пользователь уже авторизован - перенаправляем на профиль
     if request.user.is_authenticated:
         return redirect('main:profile')
     
@@ -89,7 +96,7 @@ def login_page(request):
         
         if user is not None:
             login(request, user)
-            return redirect('main:profile')  # Редирект на профиль
+            return redirect('main:profile')
         else:
             messages.error(request, 'Неверное имя пользователя или пароль')
     
@@ -408,3 +415,22 @@ def article_management_dashboard(request):
     
     return render(request, 'articles/management_dashboard.html', context)
 
+
+
+@login_required
+def report_bug(request):
+    if request.method == "POST":
+        form = BugReportForm(request.POST)
+        if form.is_valid():
+            bug = form.save(commit=False)
+            bug.user = request.user
+            bug.save()
+
+            messages.success(request, "Ошибка успешно отправлена!")
+
+            return redirect("main:report_bug")
+
+    else:
+        form = BugReportForm()
+
+    return render(request, "main/report_bug.html", {"form": form})

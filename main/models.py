@@ -135,10 +135,12 @@ class Page(models.Model):
     """Динамические страницы (О нас, Образование, Атомная отрасль и т.д.)"""
     title = models.CharField(max_length=200, verbose_name="Заголовок страницы")
     slug = models.SlugField(max_length=200, unique=True, verbose_name="URL (slug)")
-    content = models.TextField(verbose_name="Содержание (HTML)")
     
     meta_description = models.CharField(max_length=160, blank=True, verbose_name="Мета-описание")
-    is_active = models.BooleanField(default=True, verbose_name="Опубликовано")
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна"
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -357,3 +359,14 @@ class EmailCampaign(models.Model):
 
     def __str__(self):
         return self.subject
+
+# == Bug report ==
+class BugReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title

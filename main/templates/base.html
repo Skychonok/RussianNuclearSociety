@@ -101,7 +101,7 @@
                                 Настройки
                             </a>
 
-                            <a href="#">
+                            <a href="{% url 'main:report_bug' %}">
                                 Сообщить об ошибке
                             </a>
 
@@ -155,6 +155,22 @@
             <span class="opacity-75">{{ site_settings.footer_text|default:"Официальный сайт Ядерного общества" }} © 2013-{{ current_year }}</span>
         </div>
     </footer>
+    {% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        {% for message in messages %}
+            <div class="toast show align-items-center text-bg-success border-0 mb-2">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    </body>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -170,12 +186,12 @@
         const siteLogo = document.getElementById('site-logo');
         const footerLogo = document.getElementById('footer-logo');
 
-        const staticCssUrl = "/static/css/"; // можно оставить как у тебя через Django
+        const staticCssUrl = "{% static 'css/' %}";
 
-        const iconDarkUrl = "/static/img/favicon-dark.ico";
-        const iconLightUrl = "/static/img/favicon-light.ico";
+        const iconDarkUrl = "{% static 'img/favicon-dark.ico' %}";
+        const iconLightUrl = "{% static 'img/favicon-light.ico' %}";
 
-        function updateThemeUI(theme) {
+        function updateThemeUI(theme) { 
             if (theme === 'light') {
                 themeIcon.className = 'fas fa-moon';
                 siteLogo.src = iconDarkUrl;
@@ -189,7 +205,6 @@
 
         const currentTheme = localStorage.getItem('theme') || 'dark';
 
-        // применяем тему при загрузке
         if (themeLink) {
             themeLink.href = `${staticCssUrl}theme-${currentTheme}.css`;
         }
@@ -251,7 +266,12 @@
             document.querySelectorAll('.alert').forEach(el => el.remove());
         }, 3000);
 
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el, {
+                delay: 3000
+            }).show();
+        });
     });
     </script>
-</body>
+
 </html>
