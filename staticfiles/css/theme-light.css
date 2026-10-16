@@ -1,0 +1,92 @@
+body {
+    background-color: #9397b0; /* Серо-голубой фон из светлого макета */
+    color: #ffffff;
+}
+
+.navbar-custom {
+    background-color: #efeff1; /* Светлая шапка */
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.nav-link-custom {
+    color: #333333; /* Темный текст в светлой шапке */
+}
+.navbar-custom i, 
+.navbar-custom .btn-outline-custom {
+    color: #333333;
+    border-color: #333333;
+}
+.navbar-custom .btn-outline-custom:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.sidebar-box {
+    background-color: #c5c7d6; /* Блоки справа в светлой теме */
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-control-custom {
+    background-color: #74778f; /* Поля ввода в светлой теме */
+    color: #ffffff;
+}
+
+.form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-login {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    font-weight: 500;
+}
+.btn-login:hover {
+    color: rgba(255,255,255,0.8);
+}
+
+.btn-outline-custom {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+.btn-outline-custom:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.footer-custom {
+    background-color: #9397b0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Карточки в светлой теме */
+.bg-news-gray { background-color: #74778f; color: #ffffff; }
+.bg-news-blue { background-color: #6c98c3; color: #ffffff; }
+.bg-news-pink { background-color: #f1c1ec; color: #333333; }
+
+.dropdown-menu-custom {
+    background-color: #efeff1;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: none;
+}
+
+.dropdown-menu-custom .dropdown-item {
+    color: #333333;
+}
+
+.dropdown-menu-custom .dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333333;
+}
+
+.btn-outline-custom-light {
+    border-color: rgba(0, 0, 0, 0.5);
+    color: #333333;
+}
+
+.btn-outline-custom-light:hover {
+    background-color: #333333;
+    color: #ffffff;
+}

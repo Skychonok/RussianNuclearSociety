@@ -30,7 +30,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/rns_db
       DEBUG: "True"
-      SECRET_KEY: django-insecure-+93+ew@f--o00sxm_a*4pigx3_v9m-t_!^7pgci_%$$md%$$0c#j
+      SECRET_KEY: ${SECRET_KEY}
       ALLOWED_HOSTS: "*"
     depends_on:
       db:
